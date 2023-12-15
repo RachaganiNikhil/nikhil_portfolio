@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Nikhil Rachagani</title>
+<link>https://www.myblogexample.io/blog.html#category=news</link>
+<atom:link href="https://www.myblogexample.io/blog-news.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 11 Dec 2023 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Welcome To My Blog</title>
+  <dc:creator>Nikhil Rachagani</dc:creator>
+  <link>https://www.myblogexample.io/posts/welcome/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Greetings and welcome to our latest blog post! We’re thrilled to have you here as we embark on a journey of exploration and discovery. Join us as we delve into statistics and data anlaysis, unraveling insights, sharing perspectives, and offering valuable information.</p>
+<p><img src="https://www.myblogexample.io/posts/welcome/thumbnail.jpg" class="img-fluid"></p>
+<p>Your presence adds a special touch to our community, and we can’t wait to engage with you through this enriching conversation. Feel free to immerse yourself in the content, share your thoughts, and let’s make this a space where ideas flourish and connections thrive.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://www.myblogexample.io/posts/welcome/index.html</guid>
+  <pubDate>Mon, 11 Dec 2023 06:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

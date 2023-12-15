@@ -1,0 +1,40 @@
+---
+title: "R Programming"
+author: "Nikhil Rachagani"
+date: "2023-12-14"
+categories: [code, analysis]
+image: "image.jpg"
+---
+
+***The R code implements the QuickSort algorithm, a widely used and efficient sorting algorithm. The quicksort function takes an input array (arr) and recursively sorts its elements in ascending order. The algorithm employs a divide-and-conquer strategy. If the length of the array is less than or equal to 1, it is considered already sorted and is returned as is. Otherwise, a pivot element is chosen, and the array is partitioned into three segments: elements less than the pivot (less), elements equal to the pivot (equal), and elements greater than the pivot (greater). The function then recursively applies the QuickSort algorithm to the "less" and "greater" segments, and the sorted results are concatenated with the "equal" segment. The use of the ceiling(length(arr) / 2) ensures that the pivot is the middle element, and the resulting sorted array is printed. The code then generates random data (random_data) using the sample function, applies the quicksort function to obtain a sorted version (sorted_data), and prints both the original and sorted data for comparison. This code serves as a clear and concise implementation of the QuickSort algorithm in the R programming language.***
+
+```{r}
+quicksort <- function(arr) {
+  if (length(arr) <= 1) {
+    return(arr)
+  } else {
+    pivot <- arr[ceiling(length(arr) / 2)]
+    less <- arr[arr < pivot]
+    equal <- arr[arr == pivot]
+    greater <- arr[arr > pivot]
+    
+    # Visualization
+    cat("Pivot:", pivot, "\n")
+    cat("Less:", less, "\n")
+    cat("Equal:", equal, "\n")
+    cat("Greater:", greater, "\n")
+    cat("Sorted Partial Array:", c(quicksort(less), equal, quicksort(greater)), "\n\n")
+    
+    return(c(quicksort(less), equal, quicksort(greater)))
+  }
+}
+
+set.seed(123)  
+random_data <- sample(1:100, 10) 
+sorted_data <- quicksort(random_data)
+
+cat("Original Data: ", random_data, "\n")
+cat("Sorted Data: ", sorted_data, "\n")
+
+
+```

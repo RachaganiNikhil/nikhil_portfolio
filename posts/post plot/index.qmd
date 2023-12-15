@@ -1,0 +1,81 @@
+---
+title: "Data Visualization using R"
+author: "Nikhil Rachagani"
+date: "2024-01-01"
+categories: [code, analysis]
+image: "image.jpg"
+---
+
+*This R code showcases a comprehensive set of visualizations using the ggplot2 and plotly libraries to explore and present data patterns. A randomly generated dataset is employed to create a heatmap, scatter plot, boxplot, bar graph, pie chart, and a 3D scatter plot. The kableExtra library is utilized to neatly display the initial rows of the dataset in an HTML table, enhancing the overall readability. Each visualization is thoughtfully styled using the theme function, providing a clear and aesthetically pleasing representation of the data.*
+
+```{r}
+# Load libraries
+library(ggplot2)
+library(plotly)
+library(kableExtra)
+
+# Set a seed for reproducibility
+set.seed(123)
+
+# Generate a random dataframe
+n <- 100
+df <- data.frame(
+  X = rnorm(n),
+  Y = rnorm(n),
+  Z = rnorm(n),
+  Category = sample(c("A", "B", "C"), n, replace = TRUE),
+  Value = rnorm(n)
+)
+
+# Display the first few rows of the dataframe
+kable(head(df), "html") %>%
+  kable_styling()
+
+# Heatmap
+heatmap_plot <- ggplot(df, aes(x = X, y = Y, fill = Value)) +
+  geom_tile() +
+  theme_minimal() +
+  labs(title = "Heatmap") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Scatter plot
+scatter_plot <- ggplot(df, aes(x = X, y = Y, color = Category)) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Scatter Plot") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Boxplot
+boxplot_plot <- ggplot(df, aes(x = Category, y = Value, fill = Category)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Boxplot") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Bar graph
+bar_plot <- ggplot(df, aes(x = Category, y = Value, fill = Category)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Bar Graph") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Pie chart
+pie_chart <- ggplot(df, aes(x = "", y = Value, fill = Category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  labs(title = "Pie Chart") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# 3D Scatter plot using plotly
+scatter3d_plot <- plot_ly(df, x = ~X, y = ~Y, z = ~Z, color = ~Category, type = "scatter3d", mode = "markers") %>%
+  layout(scene = list(aspectmode = "cube"))
+
+# Display the visualizations
+print(heatmap_plot)
+print(scatter_plot)
+print(boxplot_plot)
+print(bar_plot)
+print(pie_chart)
+scatter3d_plot
+```

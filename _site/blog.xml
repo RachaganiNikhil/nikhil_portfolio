@@ -1,0 +1,1808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Nikhil Rachagani</title>
+<link>https://www.myblogexample.io/blog.html</link>
+<atom:link href="https://www.myblogexample.io/blog.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 15 Jan 2024 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Exploratory data analysis and machine learining</title>
+  <dc:creator>Nikhil Rachagani</dc:creator>
+  <link>https://www.myblogexample.io/posts/machine learning model/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>The R code is a concise script for exploring and comparing two classification models – logistic regression and random forest – on a randomly generated dataset. The code begins by installing and loading necessary libraries, then generates a synthetic dataframe with features (feature1, feature2, feature3) and a binary target variable. After visualizing the data through a scatter plot, it splits the dataset into training and testing sets. Two machine learning models are trained and evaluated on the test set: logistic regression and random forest. The logistic regression model is implemented using the glm function, while the random forest model is built using the randomForest function. The code concludes with a comparison of model accuracies. However, there is a missing reference (accuracy_lasso) and an undeclared lasso model, which could be addressed for a more comprehensive analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Install and load required libraries</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(dplyr)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyr)</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(caret)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(randomForest)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>randomForest 4.7-1.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type rfNews() to see new features/changes/bug fixes.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'randomForest'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    margin</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    combine</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(glmnet)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: Matrix</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Matrix'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:tidyr':
+
+    expand, pack, unpack</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loaded glmnet 4.1-8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(xgboost)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'xgboost'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    slice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(pROC)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type 'citation("pROC")' for a citation.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'pROC'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    cov, smooth, var</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Set seed for reproducibility</span></span>
+<span id="cb25-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">123</span>)</span>
+<span id="cb25-3"></span>
+<span id="cb25-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Generate random dataframe</span></span>
+<span id="cb25-5">n <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span></span>
+<span id="cb25-6">df <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(</span>
+<span id="cb25-7">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">feature1 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb25-8">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">feature2 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb25-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">feature3 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb25-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">target =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbinom</span>(n, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb25-11">)</span>
+<span id="cb25-12"></span>
+<span id="cb25-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># EDA</span></span>
+<span id="cb25-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(df)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    feature1           feature2           feature3            target     
+ Min.   :-2.80978   Min.   :-3.04786   Min.   :-2.84855   Min.   :0.000  
+ 1st Qu.:-0.62832   1st Qu.:-0.65322   1st Qu.:-0.65619   1st Qu.:0.000  
+ Median : 0.00921   Median : 0.05485   Median :-0.05057   Median :0.000  
+ Mean   : 0.01613   Mean   : 0.04247   Mean   :-0.02011   Mean   :0.486  
+ 3rd Qu.: 0.66460   3rd Qu.: 0.75345   3rd Qu.: 0.64258   3rd Qu.:1.000  
+ Max.   : 3.24104   Max.   : 3.39037   Max.   : 3.42110   Max.   :1.000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str</span>(df)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1000 obs. of  4 variables:
+ $ feature1: num  -0.5605 -0.2302 1.5587 0.0705 0.1293 ...
+ $ feature2: num  -0.996 -1.04 -0.018 -0.132 -2.549 ...
+ $ feature3: num  -0.512 0.237 -0.542 1.219 0.174 ...
+ $ target  : int  0 0 0 1 0 1 0 1 1 0 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cor</span>(df)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            feature1    feature2    feature3      target
+feature1  1.00000000  0.08647944 -0.01932954 -0.07269625
+feature2  0.08647944  1.00000000  0.02650333 -0.03986642
+feature3 -0.01932954  0.02650333  1.00000000 -0.04993487
+target   -0.07269625 -0.03986642 -0.04993487  1.00000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Visualization</span></span>
+<span id="cb31-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Scatter plot of Feature1 and Feature2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pairwise scatter plots with color by target</span></span>
+<span id="cb32-2">plot_pairs <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature2)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Pairwise Scatter Plots with Color by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb32-8"></span>
+<span id="cb32-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the plot</span></span>
+<span id="cb32-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_pairs)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Distribution of each feature by target</span></span>
+<span id="cb33-2">plot_dist <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distribution of Feature1 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb33-6"></span>
+<span id="cb33-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the plot</span></span>
+<span id="cb33-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_dist)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Similar plots for other features (feature2, feature3)</span></span>
+<span id="cb34-2">plot_dist_feature2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distribution of Feature2 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb34-6"></span>
+<span id="cb34-7">plot_dist_feature3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> feature3, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Distribution of Feature3 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb34-11"></span>
+<span id="cb34-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the plots</span></span>
+<span id="cb34-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_dist_feature2)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_dist_feature3)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Boxplots for each feature by target</span></span>
+<span id="cb36-2">plot_boxplot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boxplot of Feature1 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb36-6"></span>
+<span id="cb36-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the plot</span></span>
+<span id="cb36-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_boxplot)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Similar plots for other features (feature2, feature3)</span></span>
+<span id="cb37-2">plot_boxplot_feature2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boxplot of Feature2 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb37-6"></span>
+<span id="cb37-7">plot_boxplot_feature3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> feature3, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(target))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boxplot of Feature3 by Target"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>()</span>
+<span id="cb37-11"></span>
+<span id="cb37-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the plots</span></span>
+<span id="cb37-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_boxplot_feature2)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_boxplot_feature3)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/machine learning model/index_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Split data into training and testing sets</span></span>
+<span id="cb39-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">456</span>)</span>
+<span id="cb39-3">splitIndex <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">createDataPartition</span>(df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>target, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">p =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">list =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span>
+<span id="cb39-4">train_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df[splitIndex, ]</span>
+<span id="cb39-5">test_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df[<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>splitIndex, ]</span>
+<span id="cb39-6"></span>
+<span id="cb39-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Machine Learning Models</span></span>
+<span id="cb39-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Model 1: Logistic Regression</span></span>
+<span id="cb39-9">model_logreg <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glm</span>(target <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> train_data, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"binomial"</span>)</span>
+<span id="cb39-10">pred_logreg <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(model_logreg, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">newdata =</span> test_data, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"response"</span>)</span>
+<span id="cb39-11"></span>
+<span id="cb39-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Visualize the logistic regression model</span></span>
+<span id="cb39-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(model_logreg)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = target ~ ., family = "binomial", data = train_data)
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept) -0.036874   0.075828  -0.486    0.627
+feature1    -0.102390   0.076979  -1.330    0.183
+feature2    -0.007029   0.076266  -0.092    0.927
+feature3    -0.058923   0.076075  -0.775    0.439
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 970.13  on 699  degrees of freedom
+Residual deviance: 967.70  on 696  degrees of freedom
+AIC: 975.7
+
+Number of Fisher Scoring iterations: 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Print the confusion matrix</span></span>
+<span id="cb41-2">conf_matrix <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">confusionMatrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Actual =</span> test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>target, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Predicted =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(pred_logreg)))</span>
+<span id="cb41-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(conf_matrix)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+      Predicted
+Actual   0   1
+     0 105  52
+     1  73  70
+                                          
+               Accuracy : 0.5833          
+                 95% CI : (0.5253, 0.6397)
+    No Information Rate : 0.5933          
+    P-Value [Acc &gt; NIR] : 0.66068         
+                                          
+                  Kappa : 0.1593          
+                                          
+ Mcnemar's Test P-Value : 0.07364         
+                                          
+            Sensitivity : 0.5899          
+            Specificity : 0.5738          
+         Pos Pred Value : 0.6688          
+         Neg Pred Value : 0.4895          
+             Prevalence : 0.5933          
+         Detection Rate : 0.3500          
+   Detection Prevalence : 0.5233          
+      Balanced Accuracy : 0.5818          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Model 2: Random Forest</span></span>
+<span id="cb43-2">model_rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">randomForest</span>(target <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> train_data)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in randomForest.default(m, y, ...): The response has five or fewer
+unique values.  Are you sure you want to do regression?</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">pred_rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(model_rf, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">newdata =</span> test_data, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"response"</span>)</span>
+<span id="cb45-2"></span>
+<span id="cb45-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Convert predictions to binary factor</span></span>
+<span id="cb45-4">pred_rf_binary <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(pred_rf <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="cb45-5"></span>
+<span id="cb45-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Evaluate and print results for Model 2</span></span>
+<span id="cb45-7">confusion_matrix_rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">confusionMatrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(pred_rf_binary), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>target))</span>
+<span id="cb45-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Model 2 (Random Forest) Results:</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model 2 (Random Forest) Results:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(confusion_matrix_rf)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction  0  1
+         0 95 78
+         1 62 65
+                                          
+               Accuracy : 0.5333          
+                 95% CI : (0.4751, 0.5909)
+    No Information Rate : 0.5233          
+    P-Value [Acc &gt; NIR] : 0.3866          
+                                          
+                  Kappa : 0.0599          
+                                          
+ Mcnemar's Test P-Value : 0.2049          
+                                          
+            Sensitivity : 0.6051          
+            Specificity : 0.4545          
+         Pos Pred Value : 0.5491          
+         Neg Pred Value : 0.5118          
+             Prevalence : 0.5233          
+         Detection Rate : 0.3167          
+   Detection Prevalence : 0.5767          
+      Balanced Accuracy : 0.5298          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Model Comparison</span></span>
+<span id="cb49-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Assuming binary classification, you can compare the accuracy of the models</span></span>
+<span id="cb49-3">accuracy_logreg <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">confusionMatrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(pred_logreg)), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>target))<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>overall[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Accuracy"</span>]</span>
+<span id="cb49-4">accuracy_rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> confusion_matrix_rf<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>overall[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Accuracy"</span>]</span>
+<span id="cb49-5"></span>
+<span id="cb49-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Print the comparison results</span></span>
+<span id="cb49-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Model Comparison:</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Model Comparison:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Logistic Regression Accuracy:"</span>, accuracy_logreg, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Logistic Regression Accuracy: 0.5833333 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Random Forest Accuracy:"</span>, accuracy_rf, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Accuracy: 0.5333333 </code></pre>
+</div>
+</div>
+<p>The logistic regression model outperformed both the random forest and lasso regression models, achieving an accuracy of 0.5833. In comparison, the random forest model had an accuracy of 0.5333, and the lasso regression model had the lowest accuracy of 0.5233. Therefore, the logistic regression model appears to be the better-performing model among the three based on the given accuracy metrics. However, it’s essential to consider additional evaluation metrics and potential overfitting or underfitting issues to make a more comprehensive assessment of model performance.</p>
+
+
+
+ ]]></description>
+  <category>code</category>
+  <category>analysis</category>
+  <guid>https://www.myblogexample.io/posts/machine learning model/index.html</guid>
+  <pubDate>Mon, 15 Jan 2024 06:00:00 GMT</pubDate>
+  <media:content url="https://www.myblogexample.io/posts/machine learning model/image.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Data Visualization using R</title>
+  <dc:creator>Nikhil Rachagani</dc:creator>
+  <link>https://www.myblogexample.io/posts/post plot/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><em>This R code showcases a comprehensive set of visualizations using the ggplot2 and plotly libraries to explore and present data patterns. A randomly generated dataset is employed to create a heatmap, scatter plot, boxplot, bar graph, pie chart, and a 3D scatter plot. The kableExtra library is utilized to neatly display the initial rows of the dataset in an HTML table, enhancing the overall readability. Each visualization is thoughtfully styled using the theme function, providing a clear and aesthetically pleasing representation of the data.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Load libraries</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(plotly)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(kableExtra)</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Set a seed for reproducibility</span></span>
+<span id="cb6-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">123</span>)</span>
+<span id="cb6-5"></span>
+<span id="cb6-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Generate a random dataframe</span></span>
+<span id="cb6-7">n <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span></span>
+<span id="cb6-8">df <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(</span>
+<span id="cb6-9">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">X =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb6-10">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb6-11">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Z =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n),</span>
+<span id="cb6-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Category =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"B"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"C"</span>), n, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb6-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n)</span>
+<span id="cb6-14">)</span>
+<span id="cb6-15"></span>
+<span id="cb6-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the first few rows of the dataframe</span></span>
+<span id="cb6-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">kable</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(df), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"html"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb6-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">kable_styling</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Y</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Z</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Category</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-0.5604756</td>
+<td style="text-align: right;">-0.7104066</td>
+<td style="text-align: right;">2.1988103</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">1.4358605</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.2301775</td>
+<td style="text-align: right;">0.2568837</td>
+<td style="text-align: right;">1.3124130</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">-0.4794401</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1.5587083</td>
+<td style="text-align: right;">-0.2466919</td>
+<td style="text-align: right;">-0.2651451</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">2.2891063</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0705084</td>
+<td style="text-align: right;">-0.3475426</td>
+<td style="text-align: right;">0.5431941</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">-3.0377821</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.1292877</td>
+<td style="text-align: right;">-0.9516186</td>
+<td style="text-align: right;">-0.4143399</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">-1.0435259</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1.7150650</td>
+<td style="text-align: right;">-0.0450277</td>
+<td style="text-align: right;">-0.4762469</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">0.2465028</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Heatmap</span></span>
+<span id="cb7-2">heatmap_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> X, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Value)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_tile</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Heatmap"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Scatter plot</span></span>
+<span id="cb7-9">scatter_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> X, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> Category)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Scatter Plot"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb7-14"></span>
+<span id="cb7-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Boxplot</span></span>
+<span id="cb7-16">boxplot_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Category, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Category)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Boxplot"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-20">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb7-21"></span>
+<span id="cb7-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Bar graph</span></span>
+<span id="cb7-23">bar_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Category, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Category)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-24">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bar Graph"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb7-28"></span>
+<span id="cb7-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pie chart</span></span>
+<span id="cb7-30">pie_chart <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Category)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-32">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_polar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">theta =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"y"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_void</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Pie Chart"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span>
+<span id="cb7-36"></span>
+<span id="cb7-37"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3D Scatter plot using plotly</span></span>
+<span id="cb7-38">scatter3d_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_ly</span>(df, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>X, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">z =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Z, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Category, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"scatter3d"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mode =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"markers"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb7-39">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">layout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scene =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">aspectmode =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cube"</span>))</span>
+<span id="cb7-40"></span>
+<span id="cb7-41"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Display the visualizations</span></span>
+<span id="cb7-42"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(heatmap_plot)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/post plot/index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(scatter_plot)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/post plot/index_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(boxplot_plot)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/post plot/index_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(bar_plot)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/post plot/index_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(pie_chart)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.myblogexample.io/posts/post plot/index_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">scatter3d_plot</span></code></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ab299fa686a510d37fa0" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ab299fa686a510d37fa0">{"x":{"visdat":{"23a042be1a":["function () ","plotlyVisDat"]},"cur_data":"23a042be1a","attrs":{"23a042be1a":{"x":{},"y":{},"z":{},"mode":"markers","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"aspectmode":"cube","xaxis":{"title":"X"},"yaxis":{"title":"Y"},"zaxis":{"title":"Z"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.23017748948327996,0.4609162059892023,-0.44566197009995806,0.35981382705736381,-0.21797491465829513,-1.0260044483072397,-1.1381369370119476,1.2538149210699268,0.82158108163748711,-0.061911710576721679,-0.30596266373991676,0.2533185139947548,-0.04287045729131609,-0.22577098565926762,0.21594156874397272,0.30352864140425806,-2.3091688756408124,-1.2207177122545356,0.1813034797491502,0.005764185899886933,1.0968390131493477,0.43518149083380286,1.1488076184510938,1.3606524485300076,-0.60025958714712691,-0.23570035910047687,-1.0264209003067808],"y":[0.25688370915652953,-0.78490446945707582,0.91899660906076597,0.60796432222503338,-0.94747461418480217,-0.49055744370066834,-0.96185663413012856,-0.071308086123598666,-2.0532472215405155,0.73994751087733446,1.9091035692174834,0.78773884747517808,0.33220257895011768,-0.11945260663065868,-0.37458085776701383,0.29822759154071532,0.065293033525315264,0.31048074944313703,0.43652347891018295,-1.063326133971191,1.1099202897136404,0.084737292197196459,-0.49929201717226079,-1.3108015333279719,1.9972133847479665,-0.61116591668042086,-1.1854800845973104],"z":[1.3124129764335104,-0.78860283785024254,-0.054028125085440498,0.24368742959909201,0.61798581716652856,1.1098481389297183,0.88465049897692005,-1.0155925786035442,-0.57438868976326973,0.41898240492446387,0.32430434416137999,-0.37560287166977346,-0.34391723412845926,1.5985087711458259,-1.5329020028905982,1.5475810589837693,0.96252796848427102,0.074551177173734565,0.42816676497050549,-1.6674750975856629,0.2210194685610021,1.640846165977486,0.16806538388465753,2.0024827302928294,0.066700870930182968,0.020983586354237482,1.2499145709692157],"mode":"markers","type":"scatter3d","name":"A","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"frame":null},{"x":[-0.5604756465522126,1.715064986883281,-1.265061234606534,1.2240817974394615,0.40077145059405217,0.11068271594511971,1.7869131368030782,0.49785047822923939,-1.9666171566296382,0.70135590156368555,-0.47279140772793404,0.15337311783651522,-0.29507148299227115,0.89512566104502223,-0.20791727801959878,-1.2653963515682645,1.2079619983049905,-0.46665535362321886,1.3686022840144576,0.58461374963606916,0.12385424384461378,0.37963948275988207,-1.0717912264755778,0.44820977862942618,0.92226746787973757,1.0057385244622565,-0.70920076258239262,-0.688008616467358,1.0255713696966988,-0.28477300705100889,0.64437654851883297,0.33178196391569692,-0.32593158553122675,0.54839695950806999,0.23873173511144119,2.1873329930165766],"y":[-0.710406563699301,-0.045027724808920269,-1.6679419365881367,-0.57534696260839191,-1.617882708289164,-0.055561965524539438,0.3011533621667144,0.10567619414894333,-0.64070600830537638,-0.84970434603358225,-1.0241287906049132,0.077960849563710771,0.45150405307921465,0.04123292199293993,-0.26219748940246801,-1.5721441591454877,-1.6015361735745934,0.68791677297582754,-1.0083766082770078,-0.37243875610382904,0.97697338668562073,1.0527114655793319,-0.41685758816043178,0.63656967403384868,0.51686204431360905,-0.034067253738463997,2.1284518990161811,-0.74133609627282837,-1.0959962670746639,0.037788399171078818,-0.86551286265337402,-0.19717589434855221,0.75405378518452149,-0.3246859114908347,0.094583528173571421,0.60070882367241762],"z":[2.1988103488837196,-0.4762468946155784,-0.59461726745951105,0.11924523642758414,1.2324758784853378,-0.51606383094478026,1.6756969324031898,-0.44116321690528554,-0.7230659699398736,-1.2362731188832929,-1.2847157223177965,-0.71721816157401019,-0.090319593965851611,0.21453882662921628,-0.50219871834286078,1.4960606698463506,-0.17905159438019844,-1.3598407038213938,0.090496647139221176,0.6307541156505666,-0.11363989550614068,-0.52111731755252011,2.2930789738310939,-0.13315096432894447,-0.38877986407174348,0.68430942941646455,-1.3952743497994675,0.84964304563335513,-0.44655721642722224,0.17480270016125568,-0.26565162527822234,0.13403864536846335,-0.21905037893347584,1.0541810233769191,1.1452631103803574,1.8668518447068625],"mode":"markers","type":"scatter3d","name":"B","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"frame":null},{"x":[1.558708314149124,0.070508391424576003,0.12928773516094624,-0.68685285189352607,-0.55584113475407493,-1.0678237059868452,-0.72889122929114025,-0.62503926784925667,-1.6866933107424134,0.83778704449452468,0.42646422147681357,0.87813348753304221,0.688640254100091,0.55391765353758882,-0.38047100101238268,-0.6947069789205127,2.1689559653385126,-1.1231085832033492,-0.40288483529907598,0.77996511833631788,-0.083369066471829276,-0.028546755348703018,1.5164706044295397,-1.5487528042302212,-0.50232345310930226,-0.3332073836694201,-1.0185753831070887,0.053004226730504145,2.0500846856271444,-0.4910311660565353,-0.13889136243904462,0.3852804011263305,-0.37066003179240936,-0.22048656181875062,0.99350385596211943,-0.62790607603937143,1.5326106261851893],"y":[-0.24669187846237361,-0.34754259939773319,-0.9516185672650157,-0.38022652028776244,0.51940720394346229,0.11764659710012587,-0.25609219219824725,1.8438620052322074,-0.65194990169545852,0.23538657228485693,1.4445508584233488,-0.42249683233962482,1.1313372134141755,-1.460640070924822,-1.4438931609717993,0.70178433537471085,-1.5146676537817514,-0.53090652217030299,-1.4617555849958999,2.1001089405256717,-1.2870304760351789,0.7690422410009099,-0.28039533517024667,0.56298953322047984,-1.0491770066660657,-1.2601552447581124,3.2410399349424046,-0.48378062570874358,0.36896452738508601,-0.21538050764169339,-0.45836533271110569,1.2631851760894901,-0.34965038795355474,-0.23627956894109653,0.21444530958160127,-0.89536335797754163,-1.251271361624944],"z":[-0.26514505669635297,0.54319405923208952,-0.4143399479188597,1.6509074673366901,-0.99250715039203741,-0.57397347929798692,0.70758835383558805,-0.36365729709525257,0.059749937384600695,-0.70459646368007001,1.9552939654924639,-0.73852770473957341,-1.3170161323052418,-0.18292538837272732,-0.78153648705475143,-0.78862197085400154,-1.137303620665745,1.9023618216789271,-0.1009748853288084,-0.66476943527406218,0.48545997890487813,-0.56187636354978299,-0.088565112138883975,1.0807994961515173,-0.48987045313847427,0.047154432761527233,1.3001986776668206,-1.7565273955576375,0.089207223073294539,0.84501300406743596,0.024674982826139939,0.73649596477344215,0.3860265683496758,0.11814451104668068,1.168383873069093,-0.57746800105955676,-1.3509026860307116],"mode":"markers","type":"scatter3d","name":"C","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+
+ ]]></description>
+  <category>code</category>
+  <category>analysis</category>
+  <guid>https://www.myblogexample.io/posts/post plot/index.html</guid>
+  <pubDate>Mon, 01 Jan 2024 06:00:00 GMT</pubDate>
+  <media:content url="https://www.myblogexample.io/posts/post plot/image.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>R Programming</title>
+  <dc:creator>Nikhil Rachagani</dc:creator>
+  <link>https://www.myblogexample.io/posts/post-with-code/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><strong><em>The R code implements the QuickSort algorithm, a widely used and efficient sorting algorithm. The quicksort function takes an input array (arr) and recursively sorts its elements in ascending order. The algorithm employs a divide-and-conquer strategy. If the length of the array is less than or equal to 1, it is considered already sorted and is returned as is. Otherwise, a pivot element is chosen, and the array is partitioned into three segments: elements less than the pivot (less), elements equal to the pivot (equal), and elements greater than the pivot (greater). The function then recursively applies the QuickSort algorithm to the “less” and “greater” segments, and the sorted results are concatenated with the “equal” segment. The use of the ceiling(length(arr) / 2) ensures that the pivot is the middle element, and the resulting sorted array is printed. The code then generates random data (random_data) using the sample function, applies the quicksort function to obtain a sorted version (sorted_data), and prints both the original and sorted data for comparison. This code serves as a clear and concise implementation of the QuickSort algorithm in the R programming language.</em></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">quicksort <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(arr) {</span>
+<span id="cb1-2">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(arr) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) {</span>
+<span id="cb1-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(arr)</span>
+<span id="cb1-4">  } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> {</span>
+<span id="cb1-5">    pivot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> arr[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ceiling</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(arr) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]</span>
+<span id="cb1-6">    less <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> arr[arr <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> pivot]</span>
+<span id="cb1-7">    equal <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> arr[arr <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> pivot]</span>
+<span id="cb1-8">    greater <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> arr[arr <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> pivot]</span>
+<span id="cb1-9">    </span>
+<span id="cb1-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Visualization</span></span>
+<span id="cb1-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Pivot:"</span>, pivot, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Less:"</span>, less, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Equal:"</span>, equal, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Greater:"</span>, greater, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sorted Partial Array:"</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quicksort</span>(less), equal, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quicksort</span>(greater)), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-16">    </span>
+<span id="cb1-17">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quicksort</span>(less), equal, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quicksort</span>(greater)))</span>
+<span id="cb1-18">  }</span>
+<span id="cb1-19">}</span>
+<span id="cb1-20"></span>
+<span id="cb1-21"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">123</span>)  </span>
+<span id="cb1-22">random_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) </span>
+<span id="cb1-23">sorted_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quicksort</span>(random_data)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pivot: 67 
+Less: 31 51 14 42 50 43 25 
+Equal: 67 
+Greater: 79 97 
+Pivot: 42 
+Less: 31 14 25 
+Equal: 42 
+Greater: 51 50 43 
+Pivot: 14 
+Less:  
+Equal: 14 
+Greater: 31 25 
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Sorted Partial Array: 14 25 31 
+
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Pivot: 50 
+Less: 43 
+Equal: 50 
+Greater: 51 
+Sorted Partial Array: 43 50 51 
+
+Sorted Partial Array: 14 25 31 42 43 50 51 
+
+Pivot: 14 
+Less:  
+Equal: 14 
+Greater: 31 25 
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Sorted Partial Array: 14 25 31 
+
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Pivot: 50 
+Less: 43 
+Equal: 50 
+Greater: 51 
+Sorted Partial Array: 43 50 51 
+
+Pivot: 79 
+Less:  
+Equal: 79 
+Greater: 97 
+Sorted Partial Array: 79 97 
+
+Sorted Partial Array: 14 25 31 42 43 50 51 67 79 97 
+
+Pivot: 42 
+Less: 31 14 25 
+Equal: 42 
+Greater: 51 50 43 
+Pivot: 14 
+Less:  
+Equal: 14 
+Greater: 31 25 
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Sorted Partial Array: 14 25 31 
+
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Pivot: 50 
+Less: 43 
+Equal: 50 
+Greater: 51 
+Sorted Partial Array: 43 50 51 
+
+Sorted Partial Array: 14 25 31 42 43 50 51 
+
+Pivot: 14 
+Less:  
+Equal: 14 
+Greater: 31 25 
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Sorted Partial Array: 14 25 31 
+
+Pivot: 31 
+Less: 25 
+Equal: 31 
+Greater:  
+Sorted Partial Array: 25 31 
+
+Pivot: 50 
+Less: 43 
+Equal: 50 
+Greater: 51 
+Sorted Partial Array: 43 50 51 
+
+Pivot: 79 
+Less:  
+Equal: 79 
+Greater: 97 
+Sorted Partial Array: 79 97 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Original Data: "</span>, random_data, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Original Data:  31 79 51 14 67 42 50 43 97 25 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sorted Data: "</span>, sorted_data, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sorted Data:  14 25 31 42 43 50 51 67 79 97 </code></pre>
+</div>
+</div>
+
+
+
+ ]]></description>
+  <category>code</category>
+  <category>analysis</category>
+  <guid>https://www.myblogexample.io/posts/post-with-code/index.html</guid>
+  <pubDate>Thu, 14 Dec 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://www.myblogexample.io/posts/post-with-code/image.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Welcome To My Blog</title>
+  <dc:creator>Nikhil Rachagani</dc:creator>
+  <link>https://www.myblogexample.io/posts/welcome/index.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Greetings and welcome to our latest blog post! We’re thrilled to have you here as we embark on a journey of exploration and discovery. Join us as we delve into statistics and data anlaysis, unraveling insights, sharing perspectives, and offering valuable information.</p>
+<p><img src="https://www.myblogexample.io/posts/welcome/thumbnail.jpg" class="img-fluid"></p>
+<p>Your presence adds a special touch to our community, and we can’t wait to engage with you through this enriching conversation. Feel free to immerse yourself in the content, share your thoughts, and let’s make this a space where ideas flourish and connections thrive.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://www.myblogexample.io/posts/welcome/index.html</guid>
+  <pubDate>Mon, 11 Dec 2023 06:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
