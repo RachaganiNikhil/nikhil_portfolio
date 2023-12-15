@@ -3,7 +3,7 @@
     "path": "C:/Users/susha/Downloads/NIKHIL/NIKHIL/_quarto.yml",
     "project_path": "_quarto.yml",
     "type": "yaml",
-    "hash": "2021690510",
+    "hash": "3281904180",
     "contents": "",
     "dirty": false,
     "created": 1702606460021.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "34,16",
-        "scrollLine": "30"
+        "cursorPosition": "29,48",
+        "scrollLine": "24"
     },
     "folds": "",
-    "lastKnownWriteTime": 1702608295,
+    "lastKnownWriteTime": 1702609904,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1702608295894,
+    "last_content_update": 1702609904802,
     "read_only": false,
     "read_only_alternatives": []
 }

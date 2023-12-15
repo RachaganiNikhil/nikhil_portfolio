@@ -9,9 +9,9 @@ website:
     center: |
       [Contact Nikhil Rachagani](mailto:nikhil. nikhilrachagani@my.unt.edu )
     left: |
-      Made with [Nikhil Rachagani](https://quarto.org/)
+      Made with [Nikhil Rachagani](https://github.com/RachaganiNikhil)
     right: |
-      [Github Code Repo](https://github.com)
+      [Github Code Repo](https://github.com/RachaganiNikhil/nikhil_portfolio.git)
     background: "#B40080"
     
   
@@ -27,7 +27,7 @@ website:
         
     right:
       - icon: github
-        href: https://github.com/
+        href: https://github.com/RachaganiNikhil
       - icon: twitter
         href: https://twitter.com
 format:
