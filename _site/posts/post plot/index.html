@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nikhil Rachagani">
 <meta name="dcterms.date" content="2024-01-01">
 
-<title>Nikhil Rachagani - Data Visualization using R</title>
+<title>Nikhil Rachagani - Visual Exploration of Titanic Dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -92,21 +92,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
-
-<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<script src="../../site_libs/plotly-binding-4.10.3/plotly.js"></script>
-<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
-<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
-<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
-<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
-<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -144,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/RachaganiNikhil" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -164,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Data Visualization using R</h1>
+      <h1 class="title">Visual Exploration of Titanic Dataset</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">code</div>
                 <div class="quarto-category">analysis</div>
@@ -203,172 +191,171 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p><em>This R code showcases a comprehensive set of visualizations using the ggplot2 and plotly libraries to explore and present data patterns. A randomly generated dataset is employed to create a heatmap, scatter plot, boxplot, bar graph, pie chart, and a 3D scatter plot. The kableExtra library is utilized to neatly display the initial rows of the dataset in an HTML table, enhancing the overall readability. Each visualization is thoughtfully styled using the theme function, providing a clear and aesthetically pleasing representation of the data.</em></p>
+<p><em>The given R code analyzes and visualizes the famous Titanic dataset using the titanic package, providing insights into the parameters determining passenger survivability. The script loads the Titanic dataset and saves it as a CSV file for further investigation after installing and loading essential packages such as titanic and ggplot2. The code samples that follow explore into many elements of the dataset, from simple inquiry to advanced data visualizations. The code investigates survival status in connection to characteristics such as age, fare, gender, class, and embarkation site using well constructed ggplot visualizations. The vivid and informative visualizations help us grasp the dataset by putting light on trends and relationships among Titanic passengers.</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set CRAN mirror non-interactively</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://cloud.r-project.org"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and load the required packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"titanic"</span>, <span class="st">"ggplot2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'plotly'</code></pre>
+<pre><code>Installing packages into 'C:/Users/racha/AppData/Local/R/win-library/4.2'
+(as 'lib' is unspecified)</code></pre>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code>package 'titanic' successfully unpacked and MD5 sums checked
+package 'ggplot2' successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+    C:\Users\racha\AppData\Local\Temp\RtmpeufGNm\downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(titanic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:ggplot2':
-
-    last_plot</code></pre>
+<pre><code>Warning: package 'titanic' was built under R version 4.2.3</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:stats':
-
-    filter</code></pre>
+<pre><code>Warning: package 'ggplot2' was built under R version 4.2.3</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:graphics':
-
-    layout</code></pre>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the titanic package</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(titanic)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the Titanic dataset</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"titanic_train"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the dataset as a CSV file</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(titanic_train, <span class="st">"titanic_dataset.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore the dataset</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(titanic_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  PassengerId Survived Pclass
+1           1        0      3
+2           2        1      1
+3           3        1      3
+4           4        1      1
+5           5        0      3
+6           6        0      3
+                                                 Name    Sex Age SibSp Parch
+1                             Braund, Mr. Owen Harris   male  22     1     0
+2 Cumings, Mrs. John Bradley (Florence Briggs Thayer) female  38     1     0
+3                              Heikkinen, Miss. Laina female  26     0     0
+4        Futrelle, Mrs. Jacques Heath (Lily May Peel) female  35     1     0
+5                            Allen, Mr. William Henry   male  35     0     0
+6                                    Moran, Mr. James   male  NA     0     0
+            Ticket    Fare Cabin Embarked
+1        A/5 21171  7.2500              S
+2         PC 17599 71.2833   C85        C
+3 STON/O2. 3101282  7.9250              S
+4           113803 53.1000  C123        S
+5           373450  8.0500              S
+6           330877  8.4583              Q</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a seed for reproducibility</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a random dataframe</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Z =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Category =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of the dataframe</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(df), <span class="st">"html"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">X</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Y</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Z</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Category</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">-0.5604756</td>
-<td style="text-align: right;">-0.7104066</td>
-<td style="text-align: right;">2.1988103</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">1.4358605</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">-0.2301775</td>
-<td style="text-align: right;">0.2568837</td>
-<td style="text-align: right;">1.3124130</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">-0.4794401</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1.5587083</td>
-<td style="text-align: right;">-0.2466919</td>
-<td style="text-align: right;">-0.2651451</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">2.2891063</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0705084</td>
-<td style="text-align: right;">-0.3475426</td>
-<td style="text-align: right;">0.5431941</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">-3.0377821</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1292877</td>
-<td style="text-align: right;">-0.9516186</td>
-<td style="text-align: right;">-0.4143399</td>
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">-1.0435259</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1.7150650</td>
-<td style="text-align: right;">-0.0450277</td>
-<td style="text-align: right;">-0.4762469</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">0.2465028</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Heatmap</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>heatmap_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y, <span class="at">fill =</span> Value)) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Heatmap"</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>scatter_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y, <span class="at">color =</span> Category)) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatter Plot"</span>) <span class="sc">+</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>boxplot_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Category, <span class="at">y =</span> Value, <span class="at">fill =</span> Category)) <span class="sc">+</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot"</span>) <span class="sc">+</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar graph</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>bar_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Category, <span class="at">y =</span> Value, <span class="at">fill =</span> Category)) <span class="sc">+</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Bar Graph"</span>) <span class="sc">+</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Pie chart</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>pie_chart <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> Value, <span class="at">fill =</span> Category)) <span class="sc">+</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="at">theta =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Pie Chart"</span>) <span class="sc">+</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 3D Scatter plot using plotly</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>scatter3d_plot <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(df, <span class="at">x =</span> <span class="sc">~</span>X, <span class="at">y =</span> <span class="sc">~</span>Y, <span class="at">z =</span> <span class="sc">~</span>Z, <span class="at">color =</span> <span class="sc">~</span>Category, <span class="at">type =</span> <span class="st">"scatter3d"</span>, <span class="at">mode =</span> <span class="st">"markers"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">aspectmode =</span> <span class="st">"cube"</span>))</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the visualizations</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(heatmap_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Visualization</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 1: Bar chart for survival status</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> Survived, <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Survival Status"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FF0000"</span>, <span class="st">"#0000FF"</span>), <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(scatter_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 2: Age distribution</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age Distribution by Survival Status"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#00FF00"</span>, <span class="st">"#800080"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 177 rows containing non-finite values (`stat_bin()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(boxplot_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 3: Scatter plot of Fare and Age</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> Fare, <span class="at">y =</span> Age, <span class="at">color =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scatter plot of Fare and Age"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Fare"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Age"</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFA500"</span>, <span class="st">"#0000FF"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 177 rows containing missing values (`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bar_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 4: Gender distribution</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Sex), <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gender Distribution by Survival Status"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Gender"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFC0CB"</span>, <span class="st">"#006400"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pie_chart)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 5: Class distribution</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Pclass), <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Class Distribution by Survival Status"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Class"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFFF00"</span>, <span class="st">"#8B4513"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>scatter3d_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 6: Boxplot of Fare by Class</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Pclass), <span class="at">y =</span> Fare, <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Fare by Class and Survival Status"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Class"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Fare"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#40E0D0"</span>, <span class="st">"#8B0000"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-ab299fa686a510d37fa0" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-ab299fa686a510d37fa0">{"x":{"visdat":{"23a042be1a":["function () ","plotlyVisDat"]},"cur_data":"23a042be1a","attrs":{"23a042be1a":{"x":{},"y":{},"z":{},"mode":"markers","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"aspectmode":"cube","xaxis":{"title":"X"},"yaxis":{"title":"Y"},"zaxis":{"title":"Z"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.23017748948327996,0.4609162059892023,-0.44566197009995806,0.35981382705736381,-0.21797491465829513,-1.0260044483072397,-1.1381369370119476,1.2538149210699268,0.82158108163748711,-0.061911710576721679,-0.30596266373991676,0.2533185139947548,-0.04287045729131609,-0.22577098565926762,0.21594156874397272,0.30352864140425806,-2.3091688756408124,-1.2207177122545356,0.1813034797491502,0.005764185899886933,1.0968390131493477,0.43518149083380286,1.1488076184510938,1.3606524485300076,-0.60025958714712691,-0.23570035910047687,-1.0264209003067808],"y":[0.25688370915652953,-0.78490446945707582,0.91899660906076597,0.60796432222503338,-0.94747461418480217,-0.49055744370066834,-0.96185663413012856,-0.071308086123598666,-2.0532472215405155,0.73994751087733446,1.9091035692174834,0.78773884747517808,0.33220257895011768,-0.11945260663065868,-0.37458085776701383,0.29822759154071532,0.065293033525315264,0.31048074944313703,0.43652347891018295,-1.063326133971191,1.1099202897136404,0.084737292197196459,-0.49929201717226079,-1.3108015333279719,1.9972133847479665,-0.61116591668042086,-1.1854800845973104],"z":[1.3124129764335104,-0.78860283785024254,-0.054028125085440498,0.24368742959909201,0.61798581716652856,1.1098481389297183,0.88465049897692005,-1.0155925786035442,-0.57438868976326973,0.41898240492446387,0.32430434416137999,-0.37560287166977346,-0.34391723412845926,1.5985087711458259,-1.5329020028905982,1.5475810589837693,0.96252796848427102,0.074551177173734565,0.42816676497050549,-1.6674750975856629,0.2210194685610021,1.640846165977486,0.16806538388465753,2.0024827302928294,0.066700870930182968,0.020983586354237482,1.2499145709692157],"mode":"markers","type":"scatter3d","name":"A","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"frame":null},{"x":[-0.5604756465522126,1.715064986883281,-1.265061234606534,1.2240817974394615,0.40077145059405217,0.11068271594511971,1.7869131368030782,0.49785047822923939,-1.9666171566296382,0.70135590156368555,-0.47279140772793404,0.15337311783651522,-0.29507148299227115,0.89512566104502223,-0.20791727801959878,-1.2653963515682645,1.2079619983049905,-0.46665535362321886,1.3686022840144576,0.58461374963606916,0.12385424384461378,0.37963948275988207,-1.0717912264755778,0.44820977862942618,0.92226746787973757,1.0057385244622565,-0.70920076258239262,-0.688008616467358,1.0255713696966988,-0.28477300705100889,0.64437654851883297,0.33178196391569692,-0.32593158553122675,0.54839695950806999,0.23873173511144119,2.1873329930165766],"y":[-0.710406563699301,-0.045027724808920269,-1.6679419365881367,-0.57534696260839191,-1.617882708289164,-0.055561965524539438,0.3011533621667144,0.10567619414894333,-0.64070600830537638,-0.84970434603358225,-1.0241287906049132,0.077960849563710771,0.45150405307921465,0.04123292199293993,-0.26219748940246801,-1.5721441591454877,-1.6015361735745934,0.68791677297582754,-1.0083766082770078,-0.37243875610382904,0.97697338668562073,1.0527114655793319,-0.41685758816043178,0.63656967403384868,0.51686204431360905,-0.034067253738463997,2.1284518990161811,-0.74133609627282837,-1.0959962670746639,0.037788399171078818,-0.86551286265337402,-0.19717589434855221,0.75405378518452149,-0.3246859114908347,0.094583528173571421,0.60070882367241762],"z":[2.1988103488837196,-0.4762468946155784,-0.59461726745951105,0.11924523642758414,1.2324758784853378,-0.51606383094478026,1.6756969324031898,-0.44116321690528554,-0.7230659699398736,-1.2362731188832929,-1.2847157223177965,-0.71721816157401019,-0.090319593965851611,0.21453882662921628,-0.50219871834286078,1.4960606698463506,-0.17905159438019844,-1.3598407038213938,0.090496647139221176,0.6307541156505666,-0.11363989550614068,-0.52111731755252011,2.2930789738310939,-0.13315096432894447,-0.38877986407174348,0.68430942941646455,-1.3952743497994675,0.84964304563335513,-0.44655721642722224,0.17480270016125568,-0.26565162527822234,0.13403864536846335,-0.21905037893347584,1.0541810233769191,1.1452631103803574,1.8668518447068625],"mode":"markers","type":"scatter3d","name":"B","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"frame":null},{"x":[1.558708314149124,0.070508391424576003,0.12928773516094624,-0.68685285189352607,-0.55584113475407493,-1.0678237059868452,-0.72889122929114025,-0.62503926784925667,-1.6866933107424134,0.83778704449452468,0.42646422147681357,0.87813348753304221,0.688640254100091,0.55391765353758882,-0.38047100101238268,-0.6947069789205127,2.1689559653385126,-1.1231085832033492,-0.40288483529907598,0.77996511833631788,-0.083369066471829276,-0.028546755348703018,1.5164706044295397,-1.5487528042302212,-0.50232345310930226,-0.3332073836694201,-1.0185753831070887,0.053004226730504145,2.0500846856271444,-0.4910311660565353,-0.13889136243904462,0.3852804011263305,-0.37066003179240936,-0.22048656181875062,0.99350385596211943,-0.62790607603937143,1.5326106261851893],"y":[-0.24669187846237361,-0.34754259939773319,-0.9516185672650157,-0.38022652028776244,0.51940720394346229,0.11764659710012587,-0.25609219219824725,1.8438620052322074,-0.65194990169545852,0.23538657228485693,1.4445508584233488,-0.42249683233962482,1.1313372134141755,-1.460640070924822,-1.4438931609717993,0.70178433537471085,-1.5146676537817514,-0.53090652217030299,-1.4617555849958999,2.1001089405256717,-1.2870304760351789,0.7690422410009099,-0.28039533517024667,0.56298953322047984,-1.0491770066660657,-1.2601552447581124,3.2410399349424046,-0.48378062570874358,0.36896452738508601,-0.21538050764169339,-0.45836533271110569,1.2631851760894901,-0.34965038795355474,-0.23627956894109653,0.21444530958160127,-0.89536335797754163,-1.251271361624944],"z":[-0.26514505669635297,0.54319405923208952,-0.4143399479188597,1.6509074673366901,-0.99250715039203741,-0.57397347929798692,0.70758835383558805,-0.36365729709525257,0.059749937384600695,-0.70459646368007001,1.9552939654924639,-0.73852770473957341,-1.3170161323052418,-0.18292538837272732,-0.78153648705475143,-0.78862197085400154,-1.137303620665745,1.9023618216789271,-0.1009748853288084,-0.66476943527406218,0.48545997890487813,-0.56187636354978299,-0.088565112138883975,1.0807994961515173,-0.48987045313847427,0.047154432761527233,1.3001986776668206,-1.7565273955576375,0.089207223073294539,0.84501300406743596,0.024674982826139939,0.73649596477344215,0.3860265683496758,0.11814451104668068,1.168383873069093,-0.57746800105955676,-1.3509026860307116],"mode":"markers","type":"scatter3d","name":"C","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p><img src="index_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 7: Survival status by Embarked location</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Embarked), <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Survival Status by Embarked Location"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Embarked"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E6E6FA"</span>, <span class="st">"#808000"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 8: Age distribution by Class and Survival Status</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(titanic_train, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">fill =</span> <span class="fu">factor</span>(Survived))) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> Pclass) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age Distribution by Class and Survival Status"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#00FFFF"</span>, <span class="st">"#800000"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>, <span class="at">name =</span> <span class="st">"Survived"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 177 rows containing non-finite values (`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
@@ -611,9 +598,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">Made with <a href="https://quarto.org/">Nikhil Rachagani</a></div>   
+    <div class="nav-footer-left">Made with <a href="https://github.com/RachaganiNikhil">Nikhil Rachagani</a></div>   
     <div class="nav-footer-center"><a href="mailto:nikhil.%20nikhilrachagani@my.unt.edu">Contact Nikhil Rachagani</a></div>
-    <div class="nav-footer-right"><a href="https://github.com">Github Code Repo</a></div>
+    <div class="nav-footer-right"><a href="https://github.com/RachaganiNikhil/nikhil_portfolio.git">Github Code Repo</a></div>
   </div>
 </footer>
 
