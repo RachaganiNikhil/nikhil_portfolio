@@ -1,148 +1,91 @@
 ---
-title: "Exploratory data analysis and machine learining "
+title: "Exploring Housing Dynamics: Unveiling Predictive Insights through Linear Regression Modeling "
 author: "Nikhil Rachagani"
 date: "2024-01-15"
 categories: [code, analysis]
 image: "image.jpg"
 ---
 
-The R code is a concise script for exploring and comparing two classification models -- logistic regression and random forest -- on a randomly generated dataset. The code begins by installing and loading necessary libraries, then generates a synthetic dataframe with features (feature1, feature2, feature3) and a binary target variable. After visualizing the data through a scatter plot, it splits the dataset into training and testing sets. Two machine learning models are trained and evaluated on the test set: logistic regression and random forest. The logistic regression model is implemented using the glm function, while the random forest model is built using the randomForest function. The code concludes with a comparison of model accuracies. However, there is a missing reference (accuracy_lasso) and an undeclared lasso model, which could be addressed for a more comprehensive analysis.
+This code examines and evaluates a housing-related dataset in this R programming script. The code starts by loading necessary libraries, including lattice, ggplot2, and caret, then imports housing data from a CSV file and displays the first five rows. A pairplot is then produced to show the relationships between the numerical variables. Subsequently, the script concentrates on a basic linear regression model that predicts total rooms by utilizing the population as the feature. The model's accuracy is computed and presented. The code then expands its research to a multi-variable linear regression model, predicting median house values by combining a number of features.Additionally, this more complex model's accuracy score is calculated and printed. All things considered, this script offers an in-depth analysis of linear regression modeling for data pertaining to housing, providing insights into the correlations between variables and the precision of the predictive modeling.
 
 ```{r}
-# Install and load required libraries
-library(dplyr)
-library(tidyr)
+# Set CRAN mirror non-interactively
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+# Assuming your dataset is in a file named 'california_housing.csv'
+install.packages('ggplot2')
+install.packages('caret')
+install.packages('lattice')
+library(lattice)
 library(ggplot2)
-library(caret)
-library(randomForest)
-library(glmnet)
-library(xgboost)
-library(pROC)
+library(caret)# Load data and display the first 5 rows
+# Define the URL for the California housing dataset
+california_housing_url <- "https://raw.githubusercontent.com/ageron/handson-ml2/master/datasets/housing/housing.csv"
 
-# Set seed for reproducibility
-set.seed(123)
+# Download the dataset
+download.file(california_housing_url, destfile = "housing.csv", method = "auto", mode = "wb")
 
-# Generate random dataframe
-n <- 1000
-df <- data.frame(
-  feature1 = rnorm(n),
-  feature2 = rnorm(n),
-  feature3 = rnorm(n),
-  target = rbinom(n, 1, 0.5)
-)
+housing_data <- read.csv("housing.csv")
+head(housing_data)
 
-# EDA
-summary(df)
-str(df)
-cor(df)
+# Create a pairplot to visualize numeric data
+numeric_vars <- sapply(housing_data, is.numeric)
+pairs(housing_data[, numeric_vars], main = "Housing_Prices_Pairplot")
 
-# Visualization
-ggplot(df, aes(x = feature1, y = feature2, color = as.factor(target))) +
-  geom_point() +
-  ggtitle("Scatter plot of Feature1 and Feature2") +
-  theme_minimal()
-# Pairwise scatter plots with color by target
-plot_pairs <- ggplot(df, aes(color = as.factor(target))) +
-  geom_point(aes(x = feature1, y = feature2)) +
-  geom_point(aes(x = feature2, y = feature3)) +
-  geom_point(aes(x = feature1, y = feature3)) +
-  ggtitle("Pairwise Scatter Plots with Color by Target") +
-  theme_minimal()
+# Split into features and label
+population_feature <- housing_data[, "population"]
+total_rooms_label <- housing_data[, "total_rooms"]
 
-# Display the plot
-print(plot_pairs)
-# Distribution of each feature by target
-plot_dist <- ggplot(df, aes(x = feature1, fill = as.factor(target))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Distribution of Feature1 by Target") +
-  theme_minimal()
+# Split into training and testing data
+set.seed(0)
+split_indices <- createDataPartition(total_rooms_label, p = 0.7, list = FALSE)
+population_train <- population_feature[split_indices]
+population_test <- population_feature[-split_indices]
+rooms_train <- total_rooms_label[split_indices]
+rooms_test <- total_rooms_label[-split_indices]
 
-# Display the plot
-print(plot_dist)
-# Similar plots for other features (feature2, feature3)
-plot_dist_feature2 <- ggplot(df, aes(x = feature2, fill = as.factor(target))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Distribution of Feature2 by Target") +
-  theme_minimal()
+# Build linear regression model
+linear_model <- lm(rooms_train ~ population_train)
 
-plot_dist_feature3 <- ggplot(df, aes(x = feature3, fill = as.factor(target))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Distribution of Feature3 by Target") +
-  theme_minimal()
+# Print the accuracy score
+accuracy <- summary(linear_model)$r.squared * 100
+cat("Accuracy_Score:", accuracy, "\n")
 
-# Display the plots
-print(plot_dist_feature2)
-print(plot_dist_feature3)
-# Boxplots for each feature by target
-plot_boxplot <- ggplot(df, aes(x = as.factor(target), y = feature1, fill = as.factor(target))) +
-  geom_boxplot() +
-  ggtitle("Boxplot of Feature1 by Target") +
-  theme_minimal()
+# Plot the regression line
+plot(population_feature, total_rooms_label, main = "Linear_Regression", xlab = "Population", ylab = "Total_Rooms")
+abline(linear_model, col = "red")
 
-# Display the plot
-print(plot_boxplot)
-# Similar plots for other features (feature2, feature3)
-plot_boxplot_feature2 <- ggplot(df, aes(x = as.factor(target), y = feature2, fill = as.factor(target))) +
-  geom_boxplot() +
-  ggtitle("Boxplot of Feature2 by Target") +
-  theme_minimal()
+# Remove NaN values
+cleaned_data <- na.omit(housing_data)
 
-plot_boxplot_feature3 <- ggplot(df, aes(x = as.factor(target), y = feature3, fill = as.factor(target))) +
-  geom_boxplot() +
-  ggtitle("Boxplot of Feature3 by Target") +
-  theme_minimal()
+# Select features and label
+features_multi <- cleaned_data[, !(names(cleaned_data) %in% c("median_house_value", "ocean_proximity"))]
+label_multi <- cleaned_data[, "median_house_value"]
 
-# Display the plots
-print(plot_boxplot_feature2)
-print(plot_boxplot_feature3)
+# Split into training and testing data
+set.seed(0)
+split_indices_multi <- createDataPartition(label_multi, p = 0.7, list = FALSE)
+features_multi_train <- features_multi[split_indices_multi, ]
+features_multi_test <- features_multi[-split_indices_multi, ]
+label_multi_train <- label_multi[split_indices_multi]
+label_multi_test <- label_multi[-split_indices_multi]
+
+# Build multi-variable linear regression model
+linear_model_multi <- lm(label_multi_train ~ ., data = features_multi_train)
+
+# Print the accuracy score for the multi-variable model
+accuracy_multi <- summary(linear_model_multi)$r.squared * 100
+cat("Accuracy_Score_Multi_variable:", accuracy_multi, "\n")
+
 
 ```
 
 ```{r}
-# Split data into training and testing sets
-set.seed(456)
-splitIndex <- createDataPartition(df$target, p = 0.7, list = FALSE)
-train_data <- df[splitIndex, ]
-test_data <- df[-splitIndex, ]
-
-# Machine Learning Models
-# Model 1: Logistic Regression
-model_logreg <- glm(target ~ ., data = train_data, family = "binomial")
-pred_logreg <- predict(model_logreg, newdata = test_data, type = "response")
-
-# Visualize the logistic regression model
-summary(model_logreg)
-
-# Print the confusion matrix
-conf_matrix <- confusionMatrix(table(Actual = test_data$target, Predicted = round(pred_logreg)))
-print(conf_matrix)
-
 ```
 
 ```{r}
-# Model 2: Random Forest
-model_rf <- randomForest(target ~ ., data = train_data)
-pred_rf <- predict(model_rf, newdata = test_data, type = "response")
-
-# Convert predictions to binary factor
-pred_rf_binary <- ifelse(pred_rf > 0.5, 1, 0)
-
-# Evaluate and print results for Model 2
-confusion_matrix_rf <- confusionMatrix(factor(pred_rf_binary), factor(test_data$target))
-cat("Model 2 (Random Forest) Results:\n")
-print(confusion_matrix_rf)
 ```
 
 ```{r}
-# Model Comparison
-# Assuming binary classification, you can compare the accuracy of the models
-accuracy_logreg <- confusionMatrix(factor(round(pred_logreg)), factor(test_data$target))$overall["Accuracy"]
-accuracy_rf <- confusion_matrix_rf$overall["Accuracy"]
-
-# Print the comparison results
-cat("\nModel Comparison:\n")
-cat("Logistic Regression Accuracy:", accuracy_logreg, "\n")
-cat("Random Forest Accuracy:", accuracy_rf, "\n")
 ```
 
-The logistic regression model outperformed both the random forest and lasso regression models, achieving an accuracy of 0.5833. In comparison, the random forest model had an accuracy of 0.5333, and the lasso regression model had the lowest accuracy of 0.5233. Therefore, the logistic regression model appears to be the better-performing model among the three based on the given accuracy metrics. However, it's essential to consider additional evaluation metrics and potential overfitting or underfitting issues to make a more comprehensive assessment of model performance.
+Different levels of predicted accuracy were obtained by applying different linear regression models to the housing dataset. With population serving as the only predictor of total rooms, the basic linear regression model showed a respectably high accuracy score of 72.38%. This shows that a sizable amount of the variability in the total number of rooms within the dataset can be explained by the population alone. However, the accuracy score dropped to 63.86% when more factors were included to the multi-variable linear regression model to estimate median house values. This reduction shows the intricacy of the interactions between the selected predictors and the target variable, even though it also suggests that the new features did not significantly improve predictive accuracy as expected. To sum up, these accuracy scores highlight how crucial it is to carefully consider and evaluate features when creating regression models, highlighting the necessity of having a sophisticated grasp of the underlying dynamics of the data in order to obtain the best possible prediction performance.
