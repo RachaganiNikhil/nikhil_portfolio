@@ -1,40 +1,40 @@
 ---
-title: "R Programming"
+title: "Customized Merge Sort Implementation in R: Sorting 10,000 Random Values"
 author: "Nikhil Rachagani"
 date: "2023-12-14"
 categories: [code, analysis]
 image: "image.jpg"
 ---
 
-***The R code implements the QuickSort algorithm, a widely used and efficient sorting algorithm. The quicksort function takes an input array (arr) and recursively sorts its elements in ascending order. The algorithm employs a divide-and-conquer strategy. If the length of the array is less than or equal to 1, it is considered already sorted and is returned as is. Otherwise, a pivot element is chosen, and the array is partitioned into three segments: elements less than the pivot (less), elements equal to the pivot (equal), and elements greater than the pivot (greater). The function then recursively applies the QuickSort algorithm to the "less" and "greater" segments, and the sorted results are concatenated with the "equal" segment. The use of the ceiling(length(arr) / 2) ensures that the pivot is the middle element, and the resulting sorted array is printed. The code then generates random data (random_data) using the sample function, applies the quicksort function to obtain a sorted version (sorted_data), and prints both the original and sorted data for comparison. This code serves as a clear and concise implementation of the QuickSort algorithm in the R programming language.***
+***In this R script, we present a customized implementation of the Merge Sort algorithm to efficiently sort an array of 10,000 randomly generated values. The modified custom_merge_sort function employs a recursive approach to divide the array into subarrays until reaching individual elements, followed by merging the sorted subarrays. The script utilizes the sample function to generate a set of 10,000 random values ranging from 1 to 10,000,000 and measures the time taken to perform the sorting operation. This exploration not only showcases the implementation of the custom Merge Sort but also provides insights into the efficiency of the algorithm in handling a substantial dataset..***
 
 ```{r}
-quicksort <- function(arr) {
-  if (length(arr) <= 1) {
-    return(arr)
-  } else {
-    pivot <- arr[ceiling(length(arr) / 2)]
-    less <- arr[arr < pivot]
-    equal <- arr[arr == pivot]
-    greater <- arr[arr > pivot]
-    
-    # Visualization
-    cat("Pivot:", pivot, "\n")
-    cat("Less:", less, "\n")
-    cat("Equal:", equal, "\n")
-    cat("Greater:", greater, "\n")
-    cat("Sorted Partial Array:", c(quicksort(less), equal, quicksort(greater)), "\n\n")
-    
-    return(c(quicksort(less), equal, quicksort(greater)))
+# Modified Merge Sort function
+custom_merge_sort <- function(input_array) {
+  if (length(input_array) <= 1) {
+    return(input_array)
   }
+  
+  middle_index <- length(input_array) %/% 2
+  left_array <- custom_merge_sort(input_array[1:middle_index])
+  right_array <- custom_merge_sort(input_array[(middle_index + 1):length(input_array)])
+  
+  return(merge(left_array, right_array))
 }
 
-set.seed(123)  
-random_data <- sample(1:100, 10) 
-sorted_data <- quicksort(random_data)
+# Generate 100 random values
+set_seed <- 1024  # Set seed for reproducibility
+set.seed(set_seed)
+random_values <- sample(1:10000000, 10000, replace = TRUE)
 
-cat("Original Data: ", random_data, "\n")
-cat("Sorted Data: ", sorted_data, "\n")
+# Measure time taken to sort
+start_time <- Sys.time()
+sorted_values <- custom_merge_sort(random_values)
+end_time <- Sys.time()
 
+# Display original and sorted values and time taken
+cat("Original Values: ", random_values, "\n")
+cat("Sorted Values: ", unlist(sorted_values), "\n")
+cat("Time Taken to Sort: ", end_time - start_time, " seconds\n")
 
 ```

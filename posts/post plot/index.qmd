@@ -1,81 +1,113 @@
 ---
-title: "Data Visualization using R"
+title: "Visual Exploration of Titanic Dataset"
 author: "Nikhil Rachagani"
 date: "2024-01-01"
 categories: [code, analysis]
 image: "image.jpg"
 ---
 
-*This R code showcases a comprehensive set of visualizations using the ggplot2 and plotly libraries to explore and present data patterns. A randomly generated dataset is employed to create a heatmap, scatter plot, boxplot, bar graph, pie chart, and a 3D scatter plot. The kableExtra library is utilized to neatly display the initial rows of the dataset in an HTML table, enhancing the overall readability. Each visualization is thoughtfully styled using the theme function, providing a clear and aesthetically pleasing representation of the data.*
+*The given R code analyzes and visualizes the famous Titanic dataset using the titanic package, providing insights into the parameters determining passenger survivability. The script loads the Titanic dataset and saves it as a CSV file for further investigation after installing and loading essential packages such as titanic and ggplot2. The code samples that follow explore into many elements of the dataset, from simple inquiry to advanced data visualizations. The code investigates survival status in connection to characteristics such as age, fare, gender, class, and embarkation site using well constructed ggplot visualizations. The vivid and informative visualizations help us grasp the dataset by putting light on trends and relationships among Titanic passengers.*
 
 ```{r}
-# Load libraries
+# Set CRAN mirror non-interactively
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+# Install and load the required packages
+install.packages(c("titanic", "ggplot2"))
+library(titanic)
 library(ggplot2)
-library(plotly)
-library(kableExtra)
 
-# Set a seed for reproducibility
-set.seed(123)
+# Load the titanic package
+library(titanic)
 
-# Generate a random dataframe
-n <- 100
-df <- data.frame(
-  X = rnorm(n),
-  Y = rnorm(n),
-  Z = rnorm(n),
-  Category = sample(c("A", "B", "C"), n, replace = TRUE),
-  Value = rnorm(n)
-)
+# Download the Titanic dataset
+data("titanic_train")
 
-# Display the first few rows of the dataframe
-kable(head(df), "html") %>%
-  kable_styling()
+# Save the dataset as a CSV file
+write.csv(titanic_train, "titanic_dataset.csv", row.names = FALSE)
 
-# Heatmap
-heatmap_plot <- ggplot(df, aes(x = X, y = Y, fill = Value)) +
-  geom_tile() +
-  theme_minimal() +
-  labs(title = "Heatmap") +
-  theme(plot.title = element_text(hjust = 0.5))
+# Explore the dataset
+head(titanic_train)
 
-# Scatter plot
-scatter_plot <- ggplot(df, aes(x = X, y = Y, color = Category)) +
+# Data Visualization
+# Example 1: Bar chart for survival status
+ggplot(titanic_train, aes(x = Survived, fill = factor(Survived))) +
+  geom_bar() +
+  labs(title = "Survival Status",
+       x = "Survived",
+       y = "Count") +
+  scale_fill_manual(values = c("#FF0000", "#0000FF"), name = "Survived",
+                    labels = c("No", "Yes"))
+
+# Example 2: Age distribution
+ggplot(titanic_train, aes(x = Age, fill = factor(Survived))) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  labs(title = "Age Distribution by Survival Status",
+       x = "Age",
+       y = "Count") +
+  scale_fill_manual(values = c("#00FF00", "#800080")
+, name = "Survived",
+                    labels = c("No", "Yes"))
+
+# Example 3: Scatter plot of Fare and Age
+ggplot(titanic_train, aes(x = Fare, y = Age, color = factor(Survived))) +
   geom_point() +
-  theme_minimal() +
-  labs(title = "Scatter Plot") +
-  theme(plot.title = element_text(hjust = 0.5))
+  labs(title = "Scatter plot of Fare and Age",
+       x = "Fare",
+       y = "Age") +
+  scale_color_manual(values = c("#FFA500", "#0000FF")
+, name = "Survived",
+                     labels = c("No", "Yes"))
+                     
+# Example 4: Gender distribution
+ggplot(titanic_train, aes(x = factor(Sex), fill = factor(Survived))) +
+  geom_bar() +
+  labs(title = "Gender Distribution by Survival Status",
+       x = "Gender",
+       y = "Count") +
+  scale_fill_manual(values = c("#FFC0CB", "#006400")
+, name = "Survived",
+                    labels = c("No", "Yes"))
 
-# Boxplot
-boxplot_plot <- ggplot(df, aes(x = Category, y = Value, fill = Category)) +
+# Example 5: Class distribution
+ggplot(titanic_train, aes(x = factor(Pclass), fill = factor(Survived))) +
+  geom_bar() +
+  labs(title = "Class Distribution by Survival Status",
+       x = "Class",
+       y = "Count") +
+  scale_fill_manual(values = c("#FFFF00", "#8B4513")
+, name = "Survived",
+                    labels = c("No", "Yes"))
+
+# Example 6: Boxplot of Fare by Class
+ggplot(titanic_train, aes(x = factor(Pclass), y = Fare, fill = factor(Survived))) +
   geom_boxplot() +
-  theme_minimal() +
-  labs(title = "Boxplot") +
-  theme(plot.title = element_text(hjust = 0.5))
+  labs(title = "Boxplot of Fare by Class and Survival Status",
+       x = "Class",
+       y = "Fare") +
+  scale_fill_manual(values = c("#40E0D0", "#8B0000")
+, name = "Survived",
+                    labels = c("No", "Yes"))
 
-# Bar graph
-bar_plot <- ggplot(df, aes(x = Category, y = Value, fill = Category)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() +
-  labs(title = "Bar Graph") +
-  theme(plot.title = element_text(hjust = 0.5))
+# Example 7: Survival status by Embarked location
+ggplot(titanic_train, aes(x = factor(Embarked), fill = factor(Survived))) +
+  geom_bar() +
+  labs(title = "Survival Status by Embarked Location",
+       x = "Embarked",
+       y = "Count") +
+  scale_fill_manual(values = c("#E6E6FA", "#808000")
+, name = "Survived",
+                    labels = c("No", "Yes"))
 
-# Pie chart
-pie_chart <- ggplot(df, aes(x = "", y = Value, fill = Category)) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar(theta = "y") +
-  theme_void() +
-  labs(title = "Pie Chart") +
-  theme(plot.title = element_text(hjust = 0.5))
+# Example 8: Age distribution by Class and Survival Status
+ggplot(titanic_train, aes(x = Age, fill = factor(Survived))) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  facet_grid(. ~ Pclass) +
+  labs(title = "Age Distribution by Class and Survival Status",
+       x = "Age",
+       y = "Count") +
+  scale_fill_manual(values = c("#00FFFF", "#800000")
+, name = "Survived",
+                    labels = c("No", "Yes"))
 
-# 3D Scatter plot using plotly
-scatter3d_plot <- plot_ly(df, x = ~X, y = ~Y, z = ~Z, color = ~Category, type = "scatter3d", mode = "markers") %>%
-  layout(scene = list(aspectmode = "cube"))
-
-# Display the visualizations
-print(heatmap_plot)
-print(scatter_plot)
-print(boxplot_plot)
-print(bar_plot)
-print(pie_chart)
-scatter3d_plot
 ```
